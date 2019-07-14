@@ -16,6 +16,13 @@ const routes = new Map([
     '/filters',(req, resp) => {
         resp.setHeader('content-type', 'application/json');
         resp.end(JSON.stringify({status: "OK", data: "no filters"}));
+    }],    
+    [
+    '/say-hello',(rawData, resp, url) => {
+        let params = new URL.URLSearchParams(url.query);
+        let name = params.get('name');
+        resp.setHeader('content-type', 'text/json');
+        resp.end(`Hello, ${name}`);
     }],
     [
     'default',(req, resp) => {
@@ -32,7 +39,7 @@ const server = http.createServer((req, resp) => {
     req.on('end', () => {
         var url = URL.parse(req.url);
         var method = routes.get(url.pathname) || routes.get('default');
-        method(rawData, resp);
+        method(rawData, resp, url);
     });
 });
 
