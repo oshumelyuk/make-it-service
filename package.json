@@ -1,0 +1,27 @@
+{
+  "name": "make-it-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src\\app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://oshumelyuk:5cd48769cd78f82279a561dbdb3ac0f80d5f3ee0@github.com/oshumelyuk/make-it-service.git"
+  },
+  "author": "Olha Shumeliuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oshumelyuk/make-it-service/issues"
+  },
+  "homepage": "https://github.com/oshumelyuk/make-it-service#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5"
+  }
+}

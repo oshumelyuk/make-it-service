@@ -8,8 +8,10 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}\\simpleServer.js",
-            "env": {"PORT":"4000"},
+            "program": "${workspaceFolder}\\src\\start.js",
+            "env": {
+                "PORT": "4000"
+            }
         }
     ]
 }
