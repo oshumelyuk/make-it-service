@@ -2,6 +2,7 @@ import express from "express";
 import rootController from "./controller/rootController";
 import errorController from "./controller/errorController";
 import companyController from './controller/companyController';
+import {requestLogger, responseLogger} from './middleware/logger';
 
 const app = express();
 const controllers = {
@@ -21,8 +22,8 @@ app.post("/company/", controllers.companyController.create);
 app.delete("/company/:id", controllers.companyController.delete);
 app.get("/company", controllers.companyController.list);
 
-
+app.use(responseLogger);
 app.use(controllers.errorController.error404);
 app.use(controllers.errorController.error500);
 
-app.listen(PORT, () => console.log(`App listening on port ${PORT}!`));
+app.listen(PORT, () => console.log(`Application listening on port ${PORT}`));

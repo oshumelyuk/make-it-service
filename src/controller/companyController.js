@@ -56,7 +56,7 @@ export default function companyController () {
         return db;
     };
 
-    let resposeWriter = function(action, req, resp){
+    let resposeWriter = function(action, req, resp, next){
         var data = action(req, resp);
         resp
             .status(200)
@@ -68,10 +68,10 @@ export default function companyController () {
     } 
 
     return {
-        get: (req, resp) => resposeWriter(get, req, resp),
-        create: (req, resp) => resposeWriter(create, req, resp),
-        delete: (req, resp) => resposeWriter(remove, req, resp),
-        list: (req, resp) => resposeWriter(list, req, resp)
+        get: (...args) => resposeWriter(get, ...args),
+        create: (...args) => resposeWriter(create, ...args),
+        delete: (...args) => resposeWriter(remove, ...args),
+        list: (...args) => resposeWriter(list, ...args)
     };
 
 };

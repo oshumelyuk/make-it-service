@@ -4,6 +4,7 @@ const  rootController = () => {
         resp.json({
             done: true
         });
+        next();
     };
 
     return {
