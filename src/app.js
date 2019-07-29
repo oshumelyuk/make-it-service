@@ -3,6 +3,7 @@ import rootController from "./controller/rootController";
 import errorController from "./controller/errorController";
 import companyController from './controller/companyController';
 import {requestLogger, responseLogger} from './middleware/logger';
+import requestCounter from './middleware/requestCounter';
 
 const app = express();
 const controllers = {
@@ -15,6 +16,7 @@ const DEFAULT_PORT = 7000;
 const PORT = process.env.PORT || DEFAULT_PORT;
 
 app.use(requestLogger);
+app.use(requestCounter);
 
 app.get("/", controllers.rootController.index);
 app.get("/company/:id", controllers.companyController.get);
