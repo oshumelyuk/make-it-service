@@ -3,7 +3,7 @@ import rootController from "./controller/rootController";
 import errorController from "./controller/errorController";
 import companiesController from './controller/companiesController';
 import servicesController from './controller/servicesController';
-import {requestLogger, responseLogger} from './middleware/logger';
+import {onActionStarting, onActionCompleting} from './middleware/actionFilters';
 import requestCounter from './middleware/requestCounter';
 
 const app = express();
@@ -17,7 +17,7 @@ const controllers = {
 const DEFAULT_PORT = 7000;
 const PORT = process.env.PORT || DEFAULT_PORT;
 
-app.use(requestLogger);
+app.use(onActionStarting);
 app.use(requestCounter);
 
 app.get("/", controllers.rootController.index);
@@ -28,7 +28,7 @@ app.get("/companies", controllers.companiesController.list);
 app.get("/companies/:id/services", controllers.servicesController.getForCompany);
 app.get("/services", controllers.servicesController.list);
 
-app.use(responseLogger);
+app.use(onActionCompleting);
 app.use(controllers.errorController.error404);
 app.use(controllers.errorController.error500);
 
