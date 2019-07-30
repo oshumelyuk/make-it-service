@@ -1,7 +1,8 @@
 import express from "express";
 import rootController from "./controller/rootController";
 import errorController from "./controller/errorController";
-import companyController from './controller/companyController';
+import companiesController from './controller/companiesController';
+import servicesController from './controller/servicesController';
 import {requestLogger, responseLogger} from './middleware/logger';
 import requestCounter from './middleware/requestCounter';
 
@@ -9,7 +10,8 @@ const app = express();
 const controllers = {
   rootController: rootController(),
   errorController: errorController(),
-  companyController: companyController(),
+  companiesController: companiesController(),
+  servicesController: servicesController(),
 };
 
 const DEFAULT_PORT = 7000;
@@ -19,10 +21,12 @@ app.use(requestLogger);
 app.use(requestCounter);
 
 app.get("/", controllers.rootController.index);
-app.get("/company/:id", controllers.companyController.get);
-app.post("/company/", controllers.companyController.create);
-app.delete("/company/:id", controllers.companyController.delete);
-app.get("/company", controllers.companyController.list);
+app.get("/companies/:id", controllers.companiesController.get);
+app.post("/companies", controllers.companiesController.create);
+app.delete("/companies/:id", controllers.companiesController.delete);
+app.get("/companies", controllers.companiesController.list);
+app.get("/companies/:id/services", controllers.servicesController.getForCompany);
+app.get("/services", controllers.servicesController.list);
 
 app.use(responseLogger);
 app.use(controllers.errorController.error404);
