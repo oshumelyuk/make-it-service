@@ -1,26 +1,32 @@
 import companiesService from '../dal/companiesService';
 import resposeWriter from '../utils/resposeWriter';
+import companyValidator from '../validators/companyValidator';
 
 export default function companiesController() {
 
-    let get = function(req, resp, next){
+    const get = function(req, resp, next){
         const id = req.params.id;
         const companies = companiesService().getAll();
         return companies.find(x => x.id == id);
     };
 
-    let create = function(req, resp, next){
-        throw new Error('Method not implemented');
+    const create = function(req, resp, next){
+        var company = req.body;
+        let validateResult = companyValidator.validate(company);
+        if (!validateResult.isValid){
+            return validateResult;
+        }
+        companiesService().create(company);
     };
 
-    let remove = function(req, resp, next){
+    const remove = function(req, resp, next){
         const id = req.params.id;
         const companies = companiesService().getAll();
         let idx = companies.findIndex(x => x.id == id);
         companies.splice(idx, idx);
     };
 
-    let list = function (req, resp, next) {
+    const list = function (req, resp, next) {
         const companies = companiesService().getAll();
         return companies;
     };
@@ -31,5 +37,4 @@ export default function companiesController() {
         delete: (...args) => resposeWriter(remove, ...args),
         list: (...args) => resposeWriter(list, ...args)
     };
-
 };

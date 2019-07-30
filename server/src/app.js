@@ -5,6 +5,7 @@ import companiesController from './controller/companiesController';
 import servicesController from './controller/servicesController';
 import {onActionStarting, onActionCompleting} from './middleware/actionFilters';
 import requestCounter from './middleware/requestCounter';
+import bodyParser from 'body-parser';
 
 const app = express();
 const controllers = {
@@ -19,6 +20,7 @@ const PORT = process.env.PORT || DEFAULT_PORT;
 
 app.use(onActionStarting);
 app.use(requestCounter);
+app.use(bodyParser.json());
 
 app.get("/", controllers.rootController.index);
 app.get("/companies/:id", controllers.companiesController.get);

@@ -5,14 +5,29 @@ export default function companiesService() {
 
     let db = undefined;
 
-    return {
-        getAll: function getAll() { 
-            if (db) return db.companies;
+    const readDataFromDatabase = () => {
+        if (db) return db;
 
-            let filePath = path.join(__dirname, 'db.json');
-            let dbContent = fs.readFileSync(filePath);
-            db = JSON.parse(dbContent);
+        let filePath = path.join(__dirname, 'db.json');
+        let dbContent = fs.readFileSync(filePath);
+        return JSON.parse(dbContent);
+    }
+
+    const writeDataToDatabase = () => {
+        var dbContent = JSON.stringify(db);
+        let filePath = path.join(__dirname, 'db.json');
+        fs.writeFileSync(filePath, dbContent);
+    }
+
+    return {
+        getAll: () => { 
+            db = readDataFromDatabase();
             return db.companies;
+        },
+        create: (company) => {
+            db = readDataFromDatabase();
+            db.companies.push(company);
+            writeDataToDatabase();
         }
     }
 };
