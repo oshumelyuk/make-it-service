@@ -1,18 +1,17 @@
 import express from "express";
 import rootController from "./controller/rootController";
-import errorController from "./controller/errorController";
-import companiesController from './controller/companiesController';
-import servicesController from './controller/servicesController';
-import {onActionStarting, onActionCompleting} from './middleware/actionFilters';
-import requestCounter from './middleware/requestCounter';
-import bodyParser from 'body-parser';
+import companiesController from "./controller/companiesController";
+import servicesController from "./controller/servicesController";
+import { onActionStarting, onActionCompleting } from "./middleware/actionFilters";
+import requestCounter from "./middleware/requestCounter";
+import { handleError404, handleError500} from "./middleware/errorHandler";
+import bodyParser from "body-parser";
 
 const app = express();
 const controllers = {
   rootController: rootController(),
-  errorController: errorController(),
   companiesController: companiesController(),
-  servicesController: servicesController(),
+  servicesController: servicesController()
 };
 
 const DEFAULT_PORT = 7000;
@@ -33,7 +32,6 @@ app.get("/services", controllers.servicesController.list);
 app.post("/services", controllers.servicesController.create);
 
 app.use(onActionCompleting);
-app.use(controllers.errorController.error404);
-app.use(controllers.errorController.error500);
+app.use(handleError404, handleError500);
 
 app.listen(PORT, () => console.log(`Application listening on port ${PORT}`));
