@@ -1,33 +1,17 @@
-import fs from 'fs';
-import path from 'path';
+import database from './database';
 
 export default function companiesService() {
 
-    let db = undefined;
-
-    const readDataFromDatabase = () => {
-        if (db) return db;
-
-        let filePath = path.join(__dirname, 'db.json');
-        let dbContent = fs.readFileSync(filePath);
-        return JSON.parse(dbContent);
-    }
-
-    const writeDataToDatabase = () => {
-        var dbContent = JSON.stringify(db);
-        let filePath = path.join(__dirname, 'db.json');
-        fs.writeFileSync(filePath, dbContent);
-    }
-
+    var db = database();
     return {
         getAll: () => { 
-            db = readDataFromDatabase();
-            return db.companies;
+            let data = db.readDataFromDatabase();
+            return data.companies;
         },
         create: (company) => {
-            db = readDataFromDatabase();
-            db.companies.push(company);
-            writeDataToDatabase();
+            let data = db.readDataFromDatabase();
+            data.companies.push(company);
+            db.writeDataToDatabase(data);
         }
     }
 };

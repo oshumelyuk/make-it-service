@@ -22,6 +22,14 @@ export default {
             });
         }
 
+        if (!company.workingHours){
+            validationResult.isValid = false;
+            validationResult.errors.push({
+                key: "workingHours",
+                value: "Company should provide its working hours"
+            });
+        }
+
         return validationResult;
     }
 } 

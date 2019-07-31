@@ -20,6 +20,7 @@ const PORT = process.env.PORT || DEFAULT_PORT;
 
 app.use(onActionStarting);
 app.use(requestCounter);
+
 app.use(bodyParser.json());
 
 app.get("/", controllers.rootController.index);
@@ -29,6 +30,7 @@ app.delete("/companies/:id", controllers.companiesController.delete);
 app.get("/companies", controllers.companiesController.list);
 app.get("/companies/:id/services", controllers.servicesController.getForCompany);
 app.get("/services", controllers.servicesController.list);
+app.post("/services", controllers.servicesController.create);
 
 app.use(onActionCompleting);
 app.use(controllers.errorController.error404);

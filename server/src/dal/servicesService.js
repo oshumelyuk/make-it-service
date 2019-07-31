@@ -1,18 +1,17 @@
-import fs from 'fs';
-import path from 'path';
+import database from './database';
 
-export default function servicesService() {
+export default function companiesService() {
 
-    let db = undefined;
-
+    var db = database();
     return {
-        getAll: function getAll() { 
-            if (db) return db.companies;
-
-            let filePath = path.join(__dirname, 'db.json');
-            let dbContent = fs.readFileSync(filePath);
-            db = JSON.parse(dbContent);
-            return db.services;
+        getAll: () => { 
+            let data = db.readDataFromDatabase();
+            return data.services;
+        },
+        create: (service) => {
+            let data = db.readDataFromDatabase();
+            data.services.push(service);
+            db.writeDataToDatabase(data);
         }
     }
 };
