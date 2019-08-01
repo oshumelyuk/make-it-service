@@ -6,8 +6,7 @@ export default function companiesController() {
 
     const get = function(req, resp, next){
         const id = req.params.id;
-        const companies = companiesService().getAll();
-        return companies.find(x => x.id == id);
+        return companiesService().getAll().then(data => companies.find(x => x.id == id));
     };
 
     const create = function(req, resp, next){
@@ -32,9 +31,9 @@ export default function companiesController() {
     };
 
     return {
-        get: (...args) => resposeWriter(get, ...args),
-        create: (...args) => resposeWriter(create, ...args),
-        delete: (...args) => resposeWriter(remove, ...args),
-        list: (...args) => resposeWriter(list, ...args)
+      //  get: (...args) => resposeWriter(get, ...args),
+        // create: (...args) => resposeWriter(create, ...args),
+        // delete: (...args) => resposeWriter(remove, ...args),
+         list: (...args) => resposeWriter(list, ...args)
     };
 };

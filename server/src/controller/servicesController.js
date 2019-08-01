@@ -27,9 +27,9 @@ export default function servicesController() {
     };
 
     return {
-        getForCompany: (...args) => resposeWriter(getForCompany, ...args),
-        list: (...args) => resposeWriter(list, ...args),
-        create: (...args) => resposeWriter(create, ...args)
+        // getForCompany: (...args) => resposeWriter(getForCompany, ...args),
+        // list: (...args) => resposeWriter(list, ...args),
+        // create: (...args) => resposeWriter(create, ...args)
     };
 
 };

@@ -22,14 +22,14 @@ app.use(requestCounter);
 
 app.use(bodyParser.json());
 
-app.get("/", controllers.rootController.index);
-app.get("/companies/:id", controllers.companiesController.get);
-app.post("/companies", controllers.companiesController.create);
-app.delete("/companies/:id", controllers.companiesController.delete);
-app.get("/companies", controllers.companiesController.list);
-app.get("/companies/:id/services", controllers.servicesController.getForCompany);
-app.get("/services", controllers.servicesController.list);
-app.post("/services", controllers.servicesController.create);
+//app.get("/", controllers.rootController.index);
+//app.get("/companies/:id", controllers.companiesController.get);
+// app.post("/companies", controllers.companiesController.create);
+// app.delete("/companies/:id", controllers.companiesController.delete);
+ app.get("/companies", controllers.companiesController.list);
+// app.get("/companies/:id/services", controllers.servicesController.getForCompany);
+// app.get("/services", controllers.servicesController.list);
+// app.post("/services", controllers.servicesController.create);
 
 app.use(onActionCompleting);
 app.use(handleError404, handleError500);
