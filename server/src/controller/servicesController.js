@@ -1,40 +1,35 @@
-import servicesService from '../dal/servicesService';
-import companiesService from '../dal/companiesService';
-import resposeWriter from '../utils/resposeWriter';
-import serviceValidator from '../validators/serviceValidator';
+import servicesService from "../dal/servicesService";
+import companiesService from "../dal/companiesService";
+import resposeWriter from "../utils/resposeWriter";
+import serviceValidator from "../validators/serviceValidator";
 
 export default function servicesController() {
+  const getForCompanyAsync = async (req, resp, next) => {
+    const id = req.params.id;
+    let [company, services] = await Promise.all([companiesService().getByIdAsync(id), servicesService().getAllAsync()]);
+    if (!company) {
+      return null;
+    }
+    return company.services.map(serviceId => services.find(x => x.id == serviceId));
+  };
 
-    const getForCompanyAsync = async (req, resp, next) => {
-        const id = req.params.id;
-        let [company, services] = await Promise.all([
-            companiesService().getByIdAsync(id),
-            servicesService().getAllAsync()
-        ]);
-        if (!company) { 
-            return null;
-        }
-        return company.services.map(serviceId => services.find(x => x.id == serviceId));
-    };
+  const listAsync = async (req, resp, next) => {
+    const services = await servicesService().getAllAsync();
+    return services;
+  };
 
-    const listAsync = async (req, resp, next) => {
-        const services = await servicesService().getAllAsync();
-        return services;
-    };
+  const createAsync = async (req, resp, next) => {
+    var service = req.body;
+    let validateResult = serviceValidator.validate(service);
+    if (!validateResult.isValid) {
+      return validateResult;
+    }
+    await servicesService().createAsync(service);
+  };
 
-    const createAsync = async (req, resp, next) => {
-        var service = req.body;
-        let validateResult = serviceValidator.validate(service);
-        if (!validateResult.isValid){
-            return validateResult;
-        }
-        await servicesService().createAsync(service);
-    };
-
-    return {
-         getForCompany: (...args) => resposeWriter(getForCompanyAsync, ...args),
-         list: (...args) => resposeWriter(listAsync, ...args),
-         create: (...args) => resposeWriter(createAsync, ...args)
-    };
-
-};
+  return {
+    getForCompany: (...args) => resposeWriter(getForCompanyAsync, ...args),
+    list: (...args) => resposeWriter(listAsync, ...args),
+    create: (...args) => resposeWriter(createAsync, ...args)
+  };
+}

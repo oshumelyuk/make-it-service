@@ -1,37 +1,74 @@
-import fs from "fs";
-import path from "path";
+import { MongoClient } from "mongodb";
 
 export default function database() {
-  let dbCache = undefined;
+  const dbName = "make-it-service";
+
+  const getClient = async databaseName => {
+    if (!process.env.CONNECTION_STRING) { 
+      throw new Error("Connection string is not found in env variables");
+    }
+    const connectionString = process.env.CONNECTION_STRING;
+
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(connectionString, (err, client) => {
+        if (err) {
+          reject();
+          return;
+        }
+        resolve(client.db(databaseName));
+      });
+    });
+  };
 
   return {
-    readDataFromDatabaseAsync: () => {
-      if (dbCache) return dbCache;
-
-      let filePath = path.join(__dirname, "db.json");
+    getEntitiesAsync: async collectionName => {
+      let client = await getClient(dbName);
       return new Promise((resolve, reject) => {
-        fs.readFile(filePath, "utf8", (err, data) => {
+        client
+          .collection(collectionName)
+          .find({})
+          .toArray((err, items) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve(items);
+          });
+      });
+    },
+    getEntityAsync: async (collectionName, entityId) => {
+      let client = await getClient(dbName);
+      return new Promise((resolve, reject) => {
+        client
+          .collection(collectionName)
+          .find({ "_id": entityId })
+          .toArray((err, items) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve(items.length ? items[0] : undefined);
+          });
+      });
+    },
+    insertEntityAsync: async (collectionName, entity) => {
+      let client = await getClient(dbName);
+      return new Promise((resolve, reject) => {
+        client.collection(collectionName).insertOne(entity, (err, response) => { 
+          if (err) { reject(err); return; }
+          resolve(response);
+        });
+      });
+    },
+    removeEntityAsync: async (collectionName, entityId) => {
+      let client = await getClient(dbName);
+      return new Promise((resolve, reject) => {
+        client.collection(collectionName).deleteOne({ Id: entityId }, function (err, response) {
           if (err) {
             reject(err);
             return;
           }
-
-          dbCache = JSON.parse(data);
-          resolve(dbCache);
-        });
-      });
-    },
-    writeDataToDatabaseAsync: data => {
-      let dbContent = JSON.stringify(data, null, 4);
-      let filePath = path.join(__dirname, "db.json");
-      dbCache = data;
-      return new Promise((resolve, reject) => {
-        fs.writeFile(filePath, dbContent, err => {
-          if (!err) {
-            resolve(dbCache);
-          } else {
-            reject(err);
-          }
+          resolve(response);
         });
       });
     }
