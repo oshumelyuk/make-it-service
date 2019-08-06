@@ -4,14 +4,24 @@ export default function companiesService() {
 
     var db = database();
     return {
-        getAll: () => { 
-            let data = db.readDataFromDatabase();
+        getAllAsync: async () => {
+            let data = await db.readDataFromDatabaseAsync();
             return data.services;
-        },
-        create: (service) => {
-            let data = db.readDataFromDatabase();
+          },
+          getByIdAsync: async id => {
+            let data = await db.readDataFromDatabaseAsync();
+            return data.services.find(x => x.id === id);
+          },
+          createAsync: async service => {
+            let data = await db.readDataFromDatabaseAsync();
             data.services.push(service);
-            db.writeDataToDatabase(data);
-        }
+            await db.writeDataToDatabaseAsync(data);
+          },
+          removeAsync: async id => {
+            const data = await db.readDataFromDatabaseAsync();
+            let idx = data.services.findIndex(x => x.id == id);
+            data.services.splice(idx, idx);
+            await db.writeDataToDatabaseAsync(data);
+          }
     }
 };

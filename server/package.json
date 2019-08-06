@@ -2,7 +2,7 @@
   "name": "make-it-service",
   "version": "1.0.0",
   "description": "",
-  "main": "src\\app.js",
+  "main": "src\\app.js",  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,5 +24,6 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5"
-  }
+  },
+  "browserslist": "last 2 Chrome versions"
 }
