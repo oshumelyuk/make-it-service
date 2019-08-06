@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectID } from "mongodb";
 
 export default function database() {
   const dbName = "make-it-service";
@@ -15,7 +15,7 @@ export default function database() {
           reject();
           return;
         }
-        resolve(client.db(databaseName));
+        resolve(client);
       });
     });
   };
@@ -23,8 +23,9 @@ export default function database() {
   return {
     getEntitiesAsync: async collectionName => {
       let client = await getClient(dbName);
+      let db = client.db(databaseName);
       return new Promise((resolve, reject) => {
-        client
+        db
           .collection(collectionName)
           .find({})
           .toArray((err, items) => {
@@ -33,42 +34,50 @@ export default function database() {
               return;
             }
             resolve(items);
+            close(client);
           });
       });
     },
     getEntityAsync: async (collectionName, entityId) => {
       let client = await getClient(dbName);
+      let db = client.db(databaseName);
+      let objectId  = new ObjectID(entityId);
       return new Promise((resolve, reject) => {
-        client
+        db
           .collection(collectionName)
-          .find({ "_id": entityId })
+          .find({ "_id": objectId })
           .toArray((err, items) => {
             if (err) {
               reject(err);
               return;
             }
             resolve(items.length ? items[0] : undefined);
+            client.close();
           });
       });
     },
     insertEntityAsync: async (collectionName, entity) => {
       let client = await getClient(dbName);
+      let db = client.db(databaseName);
       return new Promise((resolve, reject) => {
-        client.collection(collectionName).insertOne(entity, (err, response) => { 
+        db.collection(collectionName).insertOne(entity, (err, response) => { 
           if (err) { reject(err); return; }
           resolve(response);
+          client.close();
         });
       });
     },
     removeEntityAsync: async (collectionName, entityId) => {
       let client = await getClient(dbName);
+      let db = client.db(databaseName);
       return new Promise((resolve, reject) => {
-        client.collection(collectionName).deleteOne({ Id: entityId }, function (err, response) {
+        db.collection(collectionName).deleteOne({ Id: entityId }, function (err, response) {
           if (err) {
             reject(err);
             return;
           }
           resolve(response);
+          client.close();
         });
       });
     }

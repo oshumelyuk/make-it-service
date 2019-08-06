@@ -10,7 +10,7 @@ export default function servicesController() {
     if (!company) {
       return null;
     }
-    return company.services.map(serviceId => services.find(x => x.id == serviceId));
+    return company.services.map(serviceId => services.find(x => x._id.str == serviceId.str));
   };
 
   const listAsync = async (req, resp, next) => {

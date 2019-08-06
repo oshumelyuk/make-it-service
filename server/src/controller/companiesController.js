@@ -5,7 +5,8 @@ import companyValidator from "../validators/companyValidator";
 export default function companiesController() {
   const getAsync = async (req, resp, next) => {
     const id = req.params.id;
-    var companies = await companiesService().getByIdAsync(id);
+    var company = await companiesService().getByIdAsync(id);
+    return company;
   };
 
   const createAsync = async (req, resp, next) => {

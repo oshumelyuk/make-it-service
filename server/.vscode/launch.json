@@ -10,7 +10,8 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}\\src\\start.js",
             "env": {
-                "PORT": "4000"
+                "PORT": "4000",
+                "CONNECTION_STRING":"mongodb+srv://masterchef:<password>@make-it-service-x20wl.mongodb.net/tes",
             }
         }
     ]
