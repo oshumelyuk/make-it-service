@@ -1,40 +1,36 @@
-import companiesService from '../dal/companiesService';
-import resposeWriter from '../utils/resposeWriter';
-import companyValidator from '../validators/companyValidator';
+import companiesService from "../dal/companiesService";
+import resposeWriter from "../utils/resposeWriter";
+import companyValidator from "../validators/companyValidator";
 
 export default function companiesController() {
+  const getAsync = async (req, resp, next) => {
+    const id = req.params.id;
+    var companies = await companiesService().getByIdAsync(id);
+  };
 
-    const get = function(req, resp, next){
-        const id = req.params.id;
-        const companies = companiesService().getAll();
-        return companies.find(x => x.id == id);
-    };
+  const createAsync = async (req, resp, next) => {
+    var company = req.body;
+    let validateResult = companyValidator.validate(company);
+    if (!validateResult.isValid) {
+      return validateResult;
+    }
+    await companiesService().createAsync(company);
+  };
 
-    const create = function(req, resp, next){
-        var company = req.body;
-        let validateResult = companyValidator.validate(company);
-        if (!validateResult.isValid){
-            return validateResult;
-        }
-        companiesService().create(company);
-    };
+  const removeAsync = async (req, resp, next) => {
+    const id = req.params.id;
+    await companiesService().removeAsync(id);
+  };
 
-    const remove = function(req, resp, next){
-        const id = req.params.id;
-        const companies = companiesService().getAll();
-        let idx = companies.findIndex(x => x.id == id);
-        companies.splice(idx, idx);
-    };
+  const listAsync = async (req, resp, next) => {
+    const companies = await companiesService().getAllAsync();
+    return companies;
+  };
 
-    const list = function (req, resp, next) {
-        const companies = companiesService().getAll();
-        return companies;
-    };
-
-    return {
-        get: (...args) => resposeWriter(get, ...args),
-        create: (...args) => resposeWriter(create, ...args),
-        delete: (...args) => resposeWriter(remove, ...args),
-        list: (...args) => resposeWriter(list, ...args)
-    };
-};
+  return {
+    get: (...args) => resposeWriter(getAsync, ...args),
+    create: (...args) => resposeWriter(createAsync, ...args),
+    delete: (...args) => resposeWriter(removeAsync, ...args),
+    list: (...args) => resposeWriter(listAsync, ...args)
+  };
+}

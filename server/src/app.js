@@ -4,7 +4,7 @@ import companiesController from "./controller/companiesController";
 import servicesController from "./controller/servicesController";
 import { onActionStarting, onActionCompleting } from "./middleware/actionFilters";
 import requestCounter from "./middleware/requestCounter";
-import { handleError404, handleError500} from "./middleware/errorHandler";
+import { handleError404, handleError500 } from "./middleware/errorHandler";
 import bodyParser from "body-parser";
 
 const app = express();

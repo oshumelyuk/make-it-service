@@ -5,31 +5,36 @@ import serviceValidator from '../validators/serviceValidator';
 
 export default function servicesController() {
 
-    const getForCompany = function(req, resp, next){
+    const getForCompanyAsync = async (req, resp, next) => {
         const id = req.params.id;
-        const companies = companiesService().getAll();
-        const services = servicesService().getAll();
-        return companies.find(x => x.id == id).services.map(serviceId => services.find(x => x.id == serviceId));
+        let [company, services] = await Promise.all([
+            companiesService().getByIdAsync(id),
+            servicesService().getAllAsync()
+        ]);
+        if (!company) { 
+            return null;
+        }
+        return company.services.map(serviceId => services.find(x => x.id == serviceId));
     };
 
-    const list = function (req, resp, next) {
-        const services = servicesService().getAll();
+    const listAsync = async (req, resp, next) => {
+        const services = await servicesService().getAllAsync();
         return services;
     };
 
-    const create = function (req, resp, next) {
+    const createAsync = async (req, resp, next) => {
         var service = req.body;
         let validateResult = serviceValidator.validate(service);
         if (!validateResult.isValid){
             return validateResult;
         }
-        servicesService().create(service);
+        await servicesService().createAsync(service);
     };
 
     return {
-        getForCompany: (...args) => resposeWriter(getForCompany, ...args),
-        list: (...args) => resposeWriter(list, ...args),
-        create: (...args) => resposeWriter(create, ...args)
+         getForCompany: (...args) => resposeWriter(getForCompanyAsync, ...args),
+         list: (...args) => resposeWriter(listAsync, ...args),
+         create: (...args) => resposeWriter(createAsync, ...args)
     };
 
 };

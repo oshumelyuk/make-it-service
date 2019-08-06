@@ -1,5 +1,5 @@
-export default function resposeWriter(action, req, resp, next) {
-  var data = action(req, resp);
+export default async function resposeWriter(action, req, resp, next) {
+  const data =  await action(req, resp);
   resp.status(200).json({
     success: true,
     data: data
