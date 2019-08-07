@@ -1,14 +1,15 @@
+import { handleError404, handleError500 } from "../middleware/errorHandler";
+
 export default async function resposeWriter(action, req, resp, next) {
   try {
     const data = await action(req, resp);
     if (!data) {
-      resp.status(404).json();
-    } else {
-      resp.status(200).json(data);
+      handleError404(req, resp, next);
+      return;
     }
+    resp.status(200).json(data);
+    next();
   } catch (err) {
-    resp.status(500).json(err);
+    handleError500({message: err}, req, resp, next);
   }
-
-  next();
 }

@@ -1,12 +1,16 @@
-import servicesService from "../dal/servicesService";
-import companiesService from "../dal/companiesService";
+import ServicesRepository from "../dal/servicesRepository";
+import CompaniesRepository from "../dal/companiesRepository";
 import resposeWriter from "../utils/resposeWriter";
 import serviceValidator from "../validators/serviceValidator";
 
 export default function servicesController() {
+
+  const servicesRepository = new ServicesRepository();
+  const companiesRepository = new CompaniesRepository();
+
   const getForCompanyAsync = async (req, resp, next) => {
     const id = req.params.id;
-    let [company, services] = await Promise.all([companiesService().getByIdAsync(id), servicesService().getAllAsync()]);
+    let [company, services] = await Promise.all([companiesRepository.getByIdAsync(id), servicesRepository.getAllAsync()]);
     if (!company) {
       return null;
     }
@@ -14,7 +18,7 @@ export default function servicesController() {
   };
 
   const listAsync = async (req, resp, next) => {
-    const services = await servicesService().getAllAsync();
+    const services = await servicesRepository.getAllAsync();
     return services;
   };
 
@@ -24,7 +28,7 @@ export default function servicesController() {
     if (!validateResult.isValid) {
       return validateResult;
     }
-    await servicesService().createAsync(service);
+    await servicesRepository.createAsync(service);
   };
 
   return {

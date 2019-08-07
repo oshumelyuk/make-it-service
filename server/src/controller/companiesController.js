@@ -1,11 +1,14 @@
-import companiesService from "../dal/companiesService";
+import CompaniesRepository from "../dal/companiesRepository";
 import resposeWriter from "../utils/resposeWriter";
 import companyValidator from "../validators/companyValidator";
 
 export default function companiesController() {
+
+  const companiesRepository = new CompaniesRepository();
+
   const getAsync = async (req, resp, next) => {
     const id = req.params.id;
-    var company = await companiesService().getByIdAsync(id);
+    var company = await companiesRepository.getByIdAsync(id);
     return company;
   };
 
@@ -15,16 +18,16 @@ export default function companiesController() {
     if (!validateResult.isValid) {
       return validateResult;
     }
-    await companiesService().createAsync(company);
+    await companiesRepository.createAsync(company);
   };
 
   const removeAsync = async (req, resp, next) => {
     const id = req.params.id;
-    await companiesService().removeAsync(id);
+    await companiesRepository.removeAsync(id);
   };
 
   const listAsync = async (req, resp, next) => {
-    const companies = await companiesService().getAllAsync();
+    const companies = await companiesRepository.getAllAsync();
     return companies;
   };
 
