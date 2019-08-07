@@ -6,9 +6,8 @@ export default async function resposeWriter(action, req, resp, next) {
     } else {
       resp.status(200).json(data);
     }
+    next();
   } catch (err) {
-    resp.status(500).json(err);
+    next(err);
   }
-
-  next();
 }
