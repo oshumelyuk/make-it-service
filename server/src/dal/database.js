@@ -4,7 +4,7 @@ export default function database() {
   const dbName = "make-it-service";
 
   const getClient = async () => {
-    if (!process.env.CONNECTION_STRING) { 
+    if (!process.env.CONNECTION_STRING) {
       throw new Error("Connection string is not found in env variables");
     }
     const connectionString = process.env.CONNECTION_STRING;
@@ -25,8 +25,7 @@ export default function database() {
       let client = await getClient();
       let db = client.db(dbName);
       return new Promise((resolve, reject) => {
-        db
-          .collection(collectionName)
+        db.collection(collectionName)
           .find({})
           .toArray((err, items) => {
             if (err) {
@@ -41,11 +40,10 @@ export default function database() {
     getEntityAsync: async (collectionName, entityId) => {
       let client = await getClient();
       let db = client.db(dbName);
-      let objectId  = new ObjectID(entityId);
+      let objectId = new ObjectID(entityId);
       return new Promise((resolve, reject) => {
-        db
-          .collection(collectionName)
-          .find({ "_id": objectId })
+        db.collection(collectionName)
+          .find({ _id: objectId })
           .toArray((err, items) => {
             if (err) {
               reject(err);
@@ -60,8 +58,27 @@ export default function database() {
       let client = await getClient();
       let db = client.db(dbName);
       return new Promise((resolve, reject) => {
-        db.collection(collectionName).insertOne(entity, (err, response) => { 
-          if (err) { reject(err); return; }
+        db.collection(collectionName).insertOne(entity, (err, response) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(response);
+          client.close();
+        });
+      });
+    },
+    updateEntityAsync: async (collectionName, entityId, fieldSet) => {
+      let client = await getClient();
+      let db = client.db(dbName);
+      let objectId = new ObjectID(entityId);
+      return new Promise((resolve, reject) => {
+        db.collection(collectionName)
+          .updateOne({ _id: objectId }, { $set: fieldSet }, { upsert: true }, (err, response) => {
+          if (err) {
+            reject(err);
+            return;
+          }
           resolve(response);
           client.close();
         });
@@ -71,7 +88,7 @@ export default function database() {
       let client = await getClient();
       let db = client.db(dbName);
       return new Promise((resolve, reject) => {
-        db.collection(collectionName).deleteOne({ Id: entityId }, function (err, response) {
+        db.collection(collectionName).deleteOne({ Id: entityId }, function(err, response) {
           if (err) {
             reject(err);
             return;

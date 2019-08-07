@@ -14,8 +14,11 @@ class RepositoryBase {
     let data = await this.db.getEntityAsync(this.collectionName, id);
     return data;
   }
-  async createAsync(service) {
-    await this.db.insertEntityAsync(this.collectionName, service);
+  async createAsync(entity) {
+    await this.db.insertEntityAsync(this.collectionName, entity);
+  }
+  async updateAsync(entityId, fieldSet) {
+    await this.db.updateEntityAsync(this.collectionName, entityId, fieldSet);
   }
   async removeAsync(id) {
     await this.db.removeEntityAsync(this.collectionName, id);

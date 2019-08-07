@@ -12,6 +12,8 @@
             "env": {
                 "PORT": "4000",
                 "CONNECTION_STRING":"mongodb+srv://masterchef:<password>@make-it-service-x20wl.mongodb.net/test",
+                "AWS_ACCESS_KEY_ID": "<aws_access_key>",
+                "AWS_ACCESS_SECRET": "<aws_access_secret>",
             }
         }
     ]

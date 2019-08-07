@@ -5,6 +5,7 @@ function handleError404(req, resp, next) {
 
 function handleError500(error, req, resp, next) {
   // Any error request to this server will get here
+  console.error(error);
   resp.status(500).json({
     success: false,
     message: error.message,
