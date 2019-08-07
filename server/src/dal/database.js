@@ -20,23 +20,27 @@ export default function database() {
     });
   };
 
+  const filterEntitiesAsync = async (collectionName, filter) => { 
+    let client = await getClient();
+    let db = client.db(dbName);
+    return new Promise((resolve, reject) => {
+      db.collection(collectionName)
+        .find(filter)
+        .toArray((err, items) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(items);
+          client.close();
+        });
+    });
+  };
+
   return {
-    getEntitiesAsync: async collectionName => {
-      let client = await getClient();
-      let db = client.db(dbName);
-      return new Promise((resolve, reject) => {
-        db.collection(collectionName)
-          .find({})
-          .toArray((err, items) => {
-            if (err) {
-              reject(err);
-              return;
-            }
-            resolve(items);
-            client.close();
-          });
-      });
-    },
+     getEntitiesAsync: (collectionName) => { return filterEntitiesAsync(collectionName, {}); },
+    //getEntitiesAsync: filterEntitiesAsync.bind(this, collectionName, {}),
+    filterEntitiesAsync,
     getEntityAsync: async (collectionName, entityId) => {
       let client = await getClient();
       let db = client.db(dbName);
