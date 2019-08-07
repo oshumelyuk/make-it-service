@@ -3,7 +3,7 @@ import { MongoClient, ObjectID } from "mongodb";
 export default function database() {
   const dbName = "make-it-service";
 
-  const getClient = async databaseName => {
+  const getClient = async () => {
     if (!process.env.CONNECTION_STRING) { 
       throw new Error("Connection string is not found in env variables");
     }
@@ -22,8 +22,8 @@ export default function database() {
 
   return {
     getEntitiesAsync: async collectionName => {
-      let client = await getClient(dbName);
-      let db = client.db(databaseName);
+      let client = await getClient();
+      let db = client.db(dbName);
       return new Promise((resolve, reject) => {
         db
           .collection(collectionName)
@@ -34,13 +34,13 @@ export default function database() {
               return;
             }
             resolve(items);
-            close(client);
+            client.close();
           });
       });
     },
     getEntityAsync: async (collectionName, entityId) => {
-      let client = await getClient(dbName);
-      let db = client.db(databaseName);
+      let client = await getClient();
+      let db = client.db(dbName);
       let objectId  = new ObjectID(entityId);
       return new Promise((resolve, reject) => {
         db
@@ -57,8 +57,8 @@ export default function database() {
       });
     },
     insertEntityAsync: async (collectionName, entity) => {
-      let client = await getClient(dbName);
-      let db = client.db(databaseName);
+      let client = await getClient();
+      let db = client.db(dbName);
       return new Promise((resolve, reject) => {
         db.collection(collectionName).insertOne(entity, (err, response) => { 
           if (err) { reject(err); return; }
@@ -68,8 +68,8 @@ export default function database() {
       });
     },
     removeEntityAsync: async (collectionName, entityId) => {
-      let client = await getClient(dbName);
-      let db = client.db(databaseName);
+      let client = await getClient();
+      let db = client.db(dbName);
       return new Promise((resolve, reject) => {
         db.collection(collectionName).deleteOne({ Id: entityId }, function (err, response) {
           if (err) {
