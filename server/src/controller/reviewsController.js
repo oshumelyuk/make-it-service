@@ -24,23 +24,26 @@ export default function servicesController() {
       rate: r.rate,
       createdDate: r.createdDate,
       comment: r.comment,
-      service: services.find(x => x._id.str == r.serviceId.str)
+      author: r.author,
+      service: services.find(x => x._id.toString() == r.serviceId.toString())
     }));
   };
 
   const createAsync = async (req, resp, next) => {
+    const id = req.params.id;
     var review = req.body;
+    review.companyId = id;
     let validateResult = reviewValidator.validate(review);
     if (!validateResult.isValid) {
       return validateResult;
     }
 
-    let [company, service] = await Promise.all(companiesRepository.getByIdAsync(review.companyId), servicesRepository.getByIdAsync(review.serviceId));
+    let [company, service] = await Promise.all([companiesRepository.getByIdAsync(review.companyId), servicesRepository.getByIdAsync(review.serviceId)]);
 
     if (!company) throw new Error(`Company ${review.companyId} does not exist`);
     if (!service) throw new Error(`Service ${review.serviceId} does not exist`);
 
-    await reviewsRepository.createAsync(review);
+    return await reviewsRepository.createAsync(review);
   };
 
   const bulkInsertAsync = async (req, resp, next) => {

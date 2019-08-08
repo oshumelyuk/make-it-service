@@ -67,7 +67,7 @@ export default function database() {
             reject(err);
             return;
           }
-          resolve(response);
+          resolve(response.ops);
           client.close();
         });
       });

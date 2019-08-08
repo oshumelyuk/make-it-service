@@ -19,7 +19,7 @@ export default function companiesController() {
     if (!validateResult.isValid) {
       return validateResult;
     }
-    await companiesRepository.createAsync(company);
+    return await companiesRepository.createAsync(company);
   };
 
   const removeAsync = async (req, resp, next) => {

@@ -14,7 +14,7 @@ export default function servicesController() {
     if (!company) {
       return null;
     }
-    return company.services.map(serviceId => services.find(x => x._id.str == serviceId.str));
+    return company.services.map(serviceId => services.find(x => x._id.toString() == serviceId.toString()));
   };
 
   const listAsync = async (req, resp, next) => {

@@ -11,6 +11,12 @@ class ReviewsRepository extends RepositoryBase {
     let data = await this.db.filterEntitiesAsync(this.collectionName, { companyId : new ObjectID(companyId)});
     return data;
   }
+
+  async createAsync(entity) {
+    entity.companyId = new ObjectID(entity.companyId);
+    entity.serviceId = new ObjectID(entity.serviceId);
+    return await super.createAsync(entity);
+  }
 }
 
 export default ReviewsRepository;

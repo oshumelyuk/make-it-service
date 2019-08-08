@@ -15,7 +15,8 @@ class RepositoryBase {
     return data;
   }
   async createAsync(entity) {
-    await this.db.insertEntityAsync(this.collectionName, entity);
+    let data = await this.db.insertEntityAsync(this.collectionName, entity);
+    return data;
   }
   async updateAsync(entityId, fieldSet) {
     await this.db.updateEntityAsync(this.collectionName, entityId, fieldSet);
