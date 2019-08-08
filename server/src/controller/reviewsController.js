@@ -3,6 +3,8 @@ import CompaniesRepository from "../dal/companiesRepository";
 import ServicesRepository from "../dal/servicesRepository";
 import resposeWriter from "../utils/resposeWriter";
 import reviewValidator from "../validators/reviewValidator";
+import ReviewsTransformer from '../services/reviewsTransformer';
+import FsFileStorage from "../services/fsFileStorage";
 
 export default function servicesController() {
   const reviewsRepository = new ReviewsRepository();
@@ -47,7 +49,10 @@ export default function servicesController() {
   };
 
   const bulkInsertAsync = async (req, resp, next) => {
-    throw new Error("Not implemented");
+    const id = req.params.id;
+    const fileStorage = new FsFileStorage();
+    await fileStorage.saveFileAsync(id, "editedReviews.json", req.pipe(new ReviewsTransformer(id)));
+    return { success: true };
   };
 
   return {
