@@ -6,7 +6,9 @@ import { onActionStarting, onActionCompleting } from "./middleware/actionFilters
 import requestCounter from "./middleware/requestCounter";
 import { handleError404, handleError500 } from "./middleware/errorHandler";
 import bodyParser from "body-parser";
+import { config} from 'dotenv';
 
+config();
 const app = express();
 const controllers = {
   rootController: rootController(),
