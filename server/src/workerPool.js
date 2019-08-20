@@ -14,7 +14,6 @@ export class WorkerPool {
           this.workingWorkers.splice(index, 1);
         }
       });
-      worker.on
       this.freeWorkers.push(worker);
     }
   }
@@ -23,5 +22,11 @@ export class WorkerPool {
     let selectedWorker = this.freeWorkers.shift();
     this.workingWorkers.push(selectedWorker);
     selectedWorker.postMessage("run");
+    return new Promise((resolve, reject) => {
+      selectedWorker.on("message", (response) => {
+        resolve(response);
+      });
+      selectedWorker.on("error", (err) => {reject(err);})
+    });
   }
 }
