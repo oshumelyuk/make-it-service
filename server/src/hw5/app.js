@@ -1,15 +1,17 @@
 import express from 'express';
-import workerPool, { WorkerPool } from '../workerPool';
+import { WorkerPool } from './workerPool';
 const app = express();
 
 const DEFAULT_PORT = 7000;
 const PORT = process.env.PORT || DEFAULT_PORT;
-const pool = new WorkerPool('./factorial.js', 50);
+const pool = new WorkerPool('./src/hw5/worker.js', 5);
 
-app.post('/execute/:n', async (req, resp) => {
-  try {
+app.get('/execute/:n', async (req, resp) => {
+  try {   
     const n = req.params.n;
+    console.log(`execute of ${n} called`);
     const res = await pool.run(n);
+    debugger;
     resp.status(200).json({
       result: res
     });
