@@ -1,16 +1,15 @@
-const {parentPort} = require('worker_threads');
+const { parentPort } = require('worker_threads');
 const factorial = require('./factorial');
 
-parentPort.once('message', (message) => {
-    debugger;
-    let response;
-    try {
-        var n = Number.parseInt(message);
-        response = factorial(n)
-    }
-    catch (err) {
-        console.log(err);
-        //log error
-    }
+if (!parentPort) {
+    console.log("cannot run worker thread without parent scope")
+    return;
+}
+
+parentPort.on('message', (message) => {
+    let response = 100;
+    let n = Number.parseInt(message);
+    console.log(`starting calculating factorial of ${n}`)
+    response = factorial(n)
     parentPort.postMessage(response);
 });

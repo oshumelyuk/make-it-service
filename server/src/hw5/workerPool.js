@@ -15,13 +15,14 @@ export class WorkerPool {
 
   createWorker(path, index) {
     let worker = new Worker(path, { workerData: index });
-    //worker.on('exit', this.onWorkerExit);
+    worker.on('exit', () => { this.onWorkerExit(worker); });
     return worker;
   }
 
   onWorkerExit(worker) {
+    if (!worker) return;
+    
     console.log(`Exited worker ${workerData}`);
-    debugger;
     this.freeWorkers.push(worker);
     this.onNewWorker.emit('newWorker');
     var index = this.workingWorkers.indexOf(worker);
@@ -31,15 +32,12 @@ export class WorkerPool {
   }
 
   async run(...args) {
-    debugger;
     console.log(`Create new thread`);
     let selectedWorker = await this.getFreeWorker();
-    debugger;
     this.workingWorkers.push(selectedWorker);
-    selectedWorker.postMessage(...args);
+    selectedWorker.postMessage(args);
     return new Promise((resolve, reject) => {
       selectedWorker.on("message", (response) => {
-        debugger;
         resolve(response);
       });
       selectedWorker.on("error", (err) => { reject(err); })

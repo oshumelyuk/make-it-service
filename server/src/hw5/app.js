@@ -11,7 +11,6 @@ app.get('/execute/:n', async (req, resp) => {
     const n = req.params.n;
     console.log(`execute of ${n} called`);
     const res = await pool.run(n);
-    debugger;
     resp.status(200).json({
       result: res
     });

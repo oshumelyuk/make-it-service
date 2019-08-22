@@ -1,7 +1,6 @@
-function factorial(n) {
-  debugger;
+const factorial = function(n) {
   console.log(`calc factorial for ${n}`);
-  if (!(n instanceof Number)) throw new Error(`${n} is not a Number`);
+  if (!Number.isFinite(n)) throw new Error(`${n} is not a Number`);
   return innerFactorial(n);
 }
 
@@ -10,4 +9,4 @@ function innerFactorial(n) {
   return n * innerFactorial(n - 1);
 }
 
-//export default factorial;
+module.exports = factorial;
